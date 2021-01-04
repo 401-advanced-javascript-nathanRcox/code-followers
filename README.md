@@ -11,3 +11,6 @@
 ### project management tool
 
 [Trello Board](https://trello.com/b/FION69R3/codefollowers)
+
+[Heroku Main Deploy](https://code-followers.herokuapp.com/)
+[Heroku Dev Deploy](https://code-followers-dev.herokuapp.com/)
