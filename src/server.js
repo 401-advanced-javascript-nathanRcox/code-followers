@@ -2,7 +2,7 @@
 //server constants
 const express = require('express');
 const app = express(); 
-const notFoundHandler = require('./error-handlers')
+const notFoundHandler = require('./error-handlers/404')
 
 
 

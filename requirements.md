@@ -39,8 +39,8 @@ Codefollowers is a text-based command line game. The user is given a series of p
 ## Data Flow
 Any time a user picks from the two prompts, the database is queried for the appropriate response, which is returned to the user. 
 
-///Add Garrett"s drawing
 
+![Data Flow Diagram](./assets/groupProject.jpg)
 
 ## Non-Functional Requirements (301 & 401 only)
 - Testability: We will aim for 90% testing coverage. We will use Jest to test that the correct responses are loading and that the traversal is functional. 
