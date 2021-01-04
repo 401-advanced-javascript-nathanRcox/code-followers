@@ -1,0 +1,23 @@
+{
+  "name": "code-followers",
+  "version": "1.0.0",
+  "description": "## Description: a text-based choose-your-own-adventure game to be played on the command line.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose -- coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/401-advanced-javascript-nathanRcox/code-followers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/401-advanced-javascript-nathanRcox/code-followers/issues"
+  },
+  "homepage": "https://github.com/401-advanced-javascript-nathanRcox/code-followers#readme",
+  "dependencies": {
+    "prompts": "^2.4.0"
+  }
+}
