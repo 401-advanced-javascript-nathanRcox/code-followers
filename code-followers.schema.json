@@ -1,10 +1,13 @@
-"use strict";
+
+
+
+
 
 {
   "story": [
     {
       "title": "start",
-      "description": "x",
+      "description": "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. Will it be coding or acting?",
       "answers": [
         {
           "title": "path A",
@@ -17,7 +20,12 @@
               "id": "A1Fail",
               "description": "x",
               "over": true,
-              "win": false
+              "win": false,
+              "answers": [
+                {
+                  "title": "path A path 1 continue"
+                }
+              ]
             },
             {
               "title": "path A step 2 continue",
