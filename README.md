@@ -16,5 +16,11 @@
 
 ![MongoDB Map](./assets/NoSQL-map.png)
 
+## Deployment
+
+[NPMjs.com](https://www.npmjs.com/package/code-followers)
+
+## How to Play
+
 <!-- [Heroku Main Deploy](https://code-followers.herokuapp.com/)
 [Heroku Dev Deploy](https://code-followers-dev.herokuapp.com/) -->
