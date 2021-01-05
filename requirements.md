@@ -6,7 +6,7 @@ Codefollowers is a text-based command line game. The user is given a series of p
 ### IN - What will your product do
 - This app will run in the command line, and users will be able to play the game on their own CLI. 
 - This app will provide users with a series of scenario-based choices.
-- Based on the user's choice, they will be given a new scenario.
+- Based on the user"s choice, they will be given a new scenario.
 - Incorrent choices will end the game early.
 - If a user makes correct choices throughout, they will graduate from Code Fellows, amid much fanfare and celebration. 
 
@@ -38,6 +38,7 @@ Codefollowers is a text-based command line game. The user is given a series of p
 
 ## Data Flow
 Any time a user picks from the two prompts, the database is queried for the appropriate response, which is returned to the user. 
+
 
 ![Data Flow Diagram](./assets/groupProject.jpg)
 
