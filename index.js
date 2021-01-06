@@ -10,6 +10,52 @@ const json = require('./code-followers.schema.json')
 require('dotenv').config();
 const server = require('./src/server');
 
+let node = API.root;
+
+let response = {};
+response.value = {}
+//response.type = null;
+response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
+
+function getTitles (currentNode){
+  if (!currentNode) throw new Error;
+  let arrayOfTitles = [];
+  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, description:currentNode.left.description, value: currentNode.left, type: currentNode.left.type});
+  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, description:currentNode.right.description, value: currentNode.right, type: currentNode.right.type});
+  console.log(arrayOfTitles);
+  return arrayOfTitles;
+}
+ 
+
+
+(async () => {
+
+  while (true) {
+  response = await prompts({
+      type: 'select',
+      //type: node.type,
+      name: 'value',
+      message: response.value.description,
+      //message: node.description,
+      choices: getTitles(node),
+  });
+  if (!response.value.left && !response.value.right) {
+    console.log(response.value.description);
+    break;
+  }
+  //console.log(`This is the response message:"${response.value.description}".`)
+  node = response.value;
+  // console.log(`This is the id of what the user picked ${response.value.value}`);
+  // console.log(`This is the left node's id: ${node.left.value}`);
+  // console.log(`This is the right node's id: ${node.right.value}`);
+}
+
+})();
+
+
+
+
+
 // const questions = [
 //   {
 //     type: 'select',

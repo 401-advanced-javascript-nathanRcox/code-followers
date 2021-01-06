@@ -12,16 +12,16 @@
 
 // The constructor for each node of the binary tree.
 class Node {
-  constructor(value, type = null, name, status, message, left = null, right = null) { 
+  constructor(value, type = null, name, status, description, left = null, right = null) { 
     this.value = value; // This is the node's 'id,' e.g. root = 
     this.type = type; // Will be 'select' for all but the leaves.
     this.name = name;
-    this.message = message;
+    this.description = description;
     this.left = left;
     this.right = right;
-    // this.choices = [ 
-    //   { title: this.left.name },
-    //   { title: this.right.name }
+    // this.answers = [ 
+    //   { value: this.left},
+    //   { value: this.right }
     // ];
     this.status = status;
   };
@@ -33,27 +33,27 @@ class BinaryTree {
   };
 
   // Define a method named add that accepts a value, and adds a new node with that value in the correct location in the binary search tree: this one will make a BST and may only accept integers.
-  add(value, type, name, status, message) {
+  add(value, type, name, status, description) {
     if(typeof value !== 'number') {
       return null;
     }
 
     if(!this.root) {
-      this.root = new Node(value, type, name, status, message);
+      this.root = new Node(value, type, name, status, description);
       return;
     }
 
     let _insert = (node) => {
       if(value < node.value) {
         if(node.left === null) {
-          node.left = new Node(value, type, name, status, message);
+          node.left = new Node(value, type, name, status, description);
           return;
         } else if (node.left !== null) {
           return +_insert(node.left);
         }
       } else if(value >= node.value) {
         if(node.right === null) {
-          node.right = new Node(value, type, name, status, message);
+          node.right = new Node(value, type, name, status, description);
           return;
         } else if (node.right !== null) {
           return _insert(node.right);
@@ -64,7 +64,7 @@ class BinaryTree {
   }
 }
 
-// constructor(value, type = null, name, status, message) { 
+// constructor(value, type = null, name, status, description) { 
 
 let API = new BinaryTree;
 API.add(15, 'select', 'Start', 'win', 'You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?');
@@ -129,7 +129,9 @@ API.add(28, null, 'Yes', 'lose', 'Yes! Who knows--maybe one of the actors will g
 
 API.add(30, null, 'No', 'win', 'No. This is a sign that your talent will never be appreciated. You instead channel your creativity into a coding bootcamp.');
 
-console.log('API:', API);
+module.exports = API;
+
+// console.log('API:', API);
 
 // This is what the collections for the MongoDB could look like.
 
