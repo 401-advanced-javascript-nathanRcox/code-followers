@@ -112,8 +112,8 @@ function signup(){
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
     .send(response)
     .then(results => {console.log(`Welcome, ${response.username}!`)})
-    console.log('------------------------')
     .catch(e => console.error('this is an error!', e))
+    console.log('------------------------')
     renderGame();
    })();
 }
