@@ -1,7 +1,7 @@
 'use strict';
 
-
 const API = require('./API');
+const server = require('./src/server');
 
 //third party dependancies
 const prompts = require('prompts');
@@ -17,20 +17,10 @@ const options = {
 };
 
 //Connect to the Mongo DB
-try{
-  mongoose.connect(process.env.MONGODB_URI, options);
-
-  // Start the web server
-  //server.start(process.env.PORT);
-}
-catch(error) {
-    console.error('Could not start up server: ', error);
-}
-
-const server = require('./src/server');
+try{ mongoose.connect(process.env.MONGODB_URI, options) }
+catch(error) { console.error('Could not start up server: ', error) }
 
 let node = API.root;
-
 let response = {};
 response.value = {}
 //response.type = null;
@@ -94,7 +84,7 @@ function signin(){
       const response = await prompts(signinQuestions);
       const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
       .auth(response.username, response.password)
-      token = results.body.user.token
+      token = results.body.user.token;
       console.log(`${response.username}, you have successfully logged in!`)
       console.log('------------------------')
 
@@ -111,13 +101,17 @@ function signup(){
     const response = await prompts(signupQuestions);
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
     .send(response)
-    .then(results => {console.log(`Welcome, ${response.username}!`)})
+    .then(results => {console.log(`Welcome, ${results.username}!`)})
     .catch(e => console.error('this is an error!', e))
     console.log('------------------------')
     renderGame();
    })();
 }
 
+// Write a function to tally the wins and losses and store that tally in the database. 
+function gameTally() {
+
+}
 
  function renderGame(){
    (async () => {
