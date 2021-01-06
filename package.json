@@ -4,9 +4,13 @@
   "description": "## Description: a text-based choose-your-own-adventure game to be played on the command line.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose -- coverage",
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon index.js",
+    "test-watch": "jest --watchAll",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
