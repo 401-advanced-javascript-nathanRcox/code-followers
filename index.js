@@ -62,6 +62,8 @@ const signinQuestions = [
   (async () => {
     try {
       const response = await prompts(signinQuestions);
+      // const results = await superagent.post(`${process.env.PORT}`)
+
       const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
       .auth(response.username, response.password);
       token = results.body.user.token;
@@ -100,9 +102,10 @@ function signup() {
 }
 
 function tallyScore(counter) {
-  let score = counter.toString();
+  // let score = counter.toString();
+  let score = { counter }
   console.log('SCORE:', score);
-  superagent.put(`https://code-followers-dev.herokuapp.com/update-score`)
+  superagent.post(`https://code-followers-dev.herokuapp.com/update-score`)
   .send(score)
   .then(results => console.log('RESULTS:', results))
   .catch(e => console.error('You\'re not getting there.'));

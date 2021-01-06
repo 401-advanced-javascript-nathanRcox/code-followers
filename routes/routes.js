@@ -32,7 +32,7 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 });
 
 // Update a user's profile with score and location (level). 
-authRouter.put('/update-score', async (req, res, next) => {
+authRouter.post('/update-score', async (req, res, next) => {
   console.log('REQ.BODY:', req.body);
   let scoreAndLocation = req.body;
   // const updateRecord = await 
