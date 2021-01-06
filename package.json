@@ -31,6 +31,7 @@
     "mongo": "^0.1.0",
     "mongoose": "^5.11.10",
     "prompts": "^2.4.0",
+    "superagent": "^6.1.0",
     "supertest": "^6.0.1"
   }
 }

@@ -22,7 +22,7 @@ module.exports = {
   start: port => {
     if(!port) { throw new Error('port missing');}
     app.listen(port, () => {
-      console.log(`listening on ${port}`);
+      //console.log(`listening on ${port}`);
     });
   },
 };
