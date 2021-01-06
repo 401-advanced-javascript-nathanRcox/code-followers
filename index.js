@@ -100,7 +100,8 @@ function signup() {
 }
 
 function tallyScore(counter) {
-  let score = counter.toString();
+  // let score = counter.toString();
+  let score = { counter }
   console.log('SCORE:', score);
   superagent.put(`https://code-followers-dev.herokuapp.com/update-score`)
   .send(score)
