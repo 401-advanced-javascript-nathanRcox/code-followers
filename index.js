@@ -1,13 +1,31 @@
 'use strict';
 
-
 //third party dependancies
 const prompts = require('prompts');
 
+require('dotenv').config();
+
+// Start up DB Server
+const mongoose = require('mongoose');
+const options = {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+};
+
+//Connect to the Mongo DB
+try{
+  mongoose.connect(process.env.MONGODB_URI, options);
+
+  // Start the web server
+  server.start(process.env.PORT);
+}
+catch(error) {
+    console.error('Could not start up server: ', error);
+}
+
 const json = require('./code-followers.schema.json')
 
-
-require('dotenv').config();
 const server = require('./src/server');
 
 const questions = [
@@ -31,7 +49,7 @@ const questions = [
     ]
   },
     {
-      type: prev => prev ==  ? 'select' : null,
+      type: prev => prev == 1? 'select' : null,
       name: 'Coding 1 prompt 3',
       message: 'you are in prompt 3 coding ind res',
       choices: [
