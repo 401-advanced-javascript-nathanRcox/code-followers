@@ -29,12 +29,7 @@ catch(error) {
 
 const server = require('./src/server');
 
-let node = API.root;
 
-let response = {};
-response.value = {}
-//response.type = null;
-response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
 
 function getTitles (currentNode){
   if (!currentNode) throw new Error;
@@ -117,8 +112,31 @@ function signup(){
    })();
 }
 
+function playAgain() {
+  (async () => {
+    const response = await prompts({
+      type: 'toggle',
+      name: 'value',
+      message: 'Do you want to play again',
+      initial: true,
+      active: 'yes',
+      inactive: 'no'
+    });
+    if (response.value === false){
+      console.log(`Game Over!! :((`)
+    } else if (response.value === true){
+      renderGame();
+    }
+  })()
+}
 
  function renderGame(){
+  let node = API.root;
+
+  let response = {};
+  response.value = {}
+  //response.type = null;
+  response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
    (async () => {
      while (true) {
        console.log(`-----------------------------------`)
@@ -136,7 +154,7 @@ function signup(){
      }
      node = response.value;
    }
-   
+   playAgain();
    })();
 
 
