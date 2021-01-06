@@ -11,9 +11,9 @@ const users = new mongoose.Schema({
   role: { type: String, required: true, default: 'user' },
 
   //these need to be set to a default for the user to login or else they have to input a score and a level
+
   score: { type: Number, required: true, default: 0 },
   level: { type: Number, required: true, default: 15 },
-
 }, { toJSON: { virtuals: true } });
 
 
