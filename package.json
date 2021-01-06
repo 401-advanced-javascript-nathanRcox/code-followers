@@ -20,10 +20,16 @@
   },
   "homepage": "https://github.com/401-advanced-javascript-nathanRcox/code-followers#readme",
   "dependencies": {
+    "base-64": "^1.0.0",
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "console-spy": "^4.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jest": "^26.6.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongo": "^0.1.0",
+    "mongoose": "^5.11.10",
     "prompts": "^2.4.0",
     "supertest": "^6.0.1"
   }
