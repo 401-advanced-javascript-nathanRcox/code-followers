@@ -114,34 +114,34 @@ function gameTally() {
 }
 
  function renderGame(){
+  let counter = 0;
+
    (async () => {
    
-     while (true) {
-     response = await prompts({
-         type: 'select',
-         //type: node.type,
-         name: 'value',
-         message: response.value.description,
-         //message: node.description,
-         choices: getTitles(node),
-     });
-     if (!response.value.left && !response.value.right) {
-       console.log(response.value.description);
-       break;
-     }
-     //console.log(`This is the response message:"${response.value.description}".`)
+    while (true) {
+      response = await prompts({
+        type: 'select',
+        name: 'value',
+        message: response.value.description,
+        choices: getTitles(node),
+    });
+    if (response.value.status === 'win') {
+      console.log(`You've chosen wisely. You've won a point, and your current score is ${++counter}.`)
+    } else if (response.value.status === 'lose') {
+      console.log(`You've chosen poorly. You've lost a point, and your current score is ${--counter}.`);
+    }
+
+    if (!response.value.left && !response.value.right) {
+      console.log(response.value.description);
+      if (counter >= 2) console.log(`You've won(!) with a final score of ${counter}.`)
+      else console.log(`You've lost(!) with a final score of ${counter}.`);
+      break;
+    };
      node = response.value;
-     // console.log(`This is the id of what the user picked ${response.value.value}`);
-     // console.log(`This is the left node's id: ${node.left.value}`);
-     // console.log(`This is the right node's id: ${node.right.value}`);
-   }
-   
-   })();
 
-
-
- }
-
+    }
+  })();
+}
 
 
 server.start(process.env.PORT);
