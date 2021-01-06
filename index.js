@@ -5,8 +5,8 @@ const API = require('./API');
 
 //third party dependancies
 const prompts = require('prompts');
-
 require('dotenv').config();
+const superagent = require('superagent');
 
 // Start up DB Server
 const mongoose = require('mongoose');
@@ -21,13 +21,11 @@ try{
   mongoose.connect(process.env.MONGODB_URI, options);
 
   // Start the web server
-  server.start(process.env.PORT);
+  //server.start(process.env.PORT);
 }
 catch(error) {
     console.error('Could not start up server: ', error);
 }
-
-const json = require('./code-followers.schema.json')
 
 const server = require('./src/server');
 
@@ -43,113 +41,112 @@ function getTitles (currentNode){
   let arrayOfTitles = [];
   if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, description:currentNode.left.description, value: currentNode.left, type: currentNode.left.type});
   if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, description:currentNode.right.description, value: currentNode.right, type: currentNode.right.type});
-  console.log(arrayOfTitles);
+  //console.log(arrayOfTitles);
   return arrayOfTitles;
 }
  
-
-
 (async () => {
-
-  while (true) {
-  response = await prompts({
-      type: 'select',
-      //type: node.type,
-      name: 'value',
-      message: response.value.description,
-      //message: node.description,
-      choices: getTitles(node),
+  const response = await prompts({
+    type: 'toggle',
+    name: 'value',
+    message: 'Do you want to sign up or sign in?',
+    initial: true,
+    active: 'sign up',
+    inactive: 'sign in'
   });
-  if (!response.value.left && !response.value.right) {
-    console.log(response.value.description);
-    break;
+  if (response.value === false){
+    signin();
+  } else if (response.value === true){
+    signup();
   }
-  //console.log(`This is the response message:"${response.value.description}".`)
-  node = response.value;
-  // console.log(`This is the id of what the user picked ${response.value.value}`);
-  // console.log(`This is the left node's id: ${node.left.value}`);
-  // console.log(`This is the right node's id: ${node.right.value}`);
-}
-
 })();
 
+const signupQuestions = [
+  {
+    type: 'text',
+    name: 'username',
+    message: 'What is your username?'
+  },
+  {
+    type: 'invisible',
+    name: 'password',
+    message: 'What is your password?'
+  },
+];
 
+const signinQuestions = [
+  {
+    type: 'text',
+    name: 'username',
+    message: 'What is your username?'
+  },
+  {
+    type: 'text',
+    name: 'password',
+    message: 'What is your password?'
+  },
+];
 
+function signin(){
+  let token;
+  (async () => {
+    try{
+      const response = await prompts(signinQuestions);
+      const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+      .auth(response.username, response.password)
+      token = results.body.user.token
+      console.log(`${response.username}, you have successfully logged in!`)
+      console.log('------------------------')
 
-
-// const questions = [
-//   {
-//     type: 'select',
-//     name: 'gameStart prompt 1',
-//     message: json.story[0].description,
-//     choices: [
-//       { title: 'Coding', value: 'Coding' },
-//       { title: 'Acting', value: 'Acting' }
-//     ]
-//   },
-  
-//   {
-//     type: prev => prev == 'Coding' ? 'select' : null,
-//     name: 'Coding 1 prompt 2',
-//     message: 'You decide to code. Now that you’ve made the choice to learn to code, you must choose between learning independently or attending a bootcamp. Which do you choose?',
-//     choices: [
-//       { title: 'Study independently', value: 'Study independently' },
-//       { title: 'Attend a bootcamp', value: 'Attend a bootcamp' }
-//     ]
-//   },
-//     {
-//       type: prev => prev ==  ? 'select' : null,
-//       name: 'Coding 1 prompt 3',
-//       message: 'you are in prompt 3 coding ind res',
-//       choices: [
-//         { title: 'sell kidney' },
-//         {title: 'bootcamp'}
-//       ]
-//     },
-//     {
-//       type: prev => prev == 1 ? 'select' : null,
-//       name: 'Coding 2',
-//       message: 'you are in prompt 3 coding bootcamp res',
-//       choices: [
-//         { title: 'sell chocolate' },
-//         {title: 'bootcamp'}
-//       ]
-//     },
-//   {
-//     type: prev => prev == 1 ? 'select' : null,
-//     name: 'Acting 1',
-//     message: 'you’ve always dreamt of becoming an actor, but dreams won’t tile your floors, let alone vacuum them. Now you have to act! What will you do first? A:  B: Join your community’s theater troupe',
-//     choices: [
-//       { title: 'Move to NYC to go to acting school' },
-//       { title: 'Join your community’s theater troupe' }
-//     ]
-//   },
-//     {
-//       type: prev => prev == 0 ? 'select' : null,
-//       name: 'Acting 2',
-//       message: 'you are in prompt 2 Acting res',
-//       choices: [
-//         { title: 'sell kidney' },
-//         {title: 'bootcamp'}
-//       ]
-//     },
-//     {
-//       type: prev => prev == 1 ? 'select' : null,
-//       name: 'Acting 2',
-//       message: 'you are in prompt 2 Acting res',
-//       choices: [
-//         { title: 'sell chocolate' },
-//         {title: 'bootcamp'}
-//       ]
-//     }
-
-// ];
+      renderGame();
+    }
+    catch{
+      (e => console.error('this is an error!', e))
+    }
+   })();
+}
  
-// (async () => {
-//   const response = await prompts(questions);
-//   console.log(response)
-// })();
+function signup(){
+  (async () => {
+    const response = await prompts(signupQuestions);
+    await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
+    .send(response)
+    .then(results => {console.log(`Welcome, ${response.username}!`)})
+    console.log('------------------------')
+    .catch(e => console.error('this is an error!', e))
+    renderGame();
+   })();
+}
 
+
+ function renderGame(){
+   (async () => {
+   
+     while (true) {
+     response = await prompts({
+         type: 'select',
+         //type: node.type,
+         name: 'value',
+         message: response.value.description,
+         //message: node.description,
+         choices: getTitles(node),
+     });
+     if (!response.value.left && !response.value.right) {
+       console.log(response.value.description);
+       break;
+     }
+     //console.log(`This is the response message:"${response.value.description}".`)
+     node = response.value;
+     // console.log(`This is the id of what the user picked ${response.value.value}`);
+     // console.log(`This is the left node's id: ${node.left.value}`);
+     // console.log(`This is the right node's id: ${node.right.value}`);
+   }
+   
+   })();
+
+
+
+ }
 
 
 
