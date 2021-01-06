@@ -73,7 +73,7 @@ API.add(7, 'select', 'Coding', 'win', 'Now that you’ve made the choice to lear
 
 API.add(23, 'select', 'Acting', 'win', 'You’ve always dreamt of becoming an actor, but dreams won’t tile your floors, let alone vacuum them. Now you have to act! What will you do first?');
 
-API.add(3, 'select', 'Independent study', 'win', 'Although you’ve discovered Code Fellows, you go against your better judgement and decide to watch YouTube videos all day and end up on the dark web selling a kidney because a bootcamp feels like too much of an investment. Do you reconsider a bootcamp or blow the kidney money on more Udemy courses?');
+API.add(3, 'select', 'Independent study', 'lose', 'Although you’ve discovered Code Fellows, you go against your better judgement and decide to watch YouTube videos all day and end up on the dark web selling a kidney because a bootcamp feels like too much of an investment. Do you reconsider a bootcamp or blow the kidney money on more Udemy courses?');
 
 API.add(11, 'select', 'Bootcamp', 'win', 'You discover Code Fellows while spending five hours a day lying in bed on Instagram. Do you want to find a new career and a new community of amazing people, as well as develop the most in-demand skills available? Yes or no?');
 
@@ -107,7 +107,7 @@ API.add(6, null, 'Days', 'win', 'You have lost track of where you are, which pla
 
 API.add(8, null, 'YouTube', 'lose', 'You take a part-time job creating mime career tutorials in hopes of selling them to the vast market of mime hopefuls via your new YouTube channel.');
 
-API.add(10, null, 'Circus clown', 'win', 'You meet your future spouse stuffed in a tiny clown car and live happily ever after. Your child chooses not to follow in your footsteps and becomes a trillionaire tech investor.');
+API.add(10, null, 'Circus clown', 'lose', 'You meet your future spouse stuffed in a tiny clown car and live happily ever after. Your child chooses not to follow in your footsteps and becomes a trillionaire tech investor.');
 
 API.add(12, null, 'JavaScript', 'win', 'You graduate from Code Fellows and pass every whiteboard interview at Amazon, becoming its next sensation and giving Jeff Bezos a new reason to find it hard to sleep at night.');
 
@@ -115,13 +115,13 @@ API.add(14, null, 'Python', 'win', 'You graduate from Code Fellows and pass ever
 
 API.add(16, null, 'Dream on', 'lose', 'You’ve dreamed a dream in time gone by, and you’re unwilling to let it go. Plus, your Mom’s basement just flooded. So, you decide to give it one more go, and you get the lead in Les Mis, only to be outshone by your understudy, who steals the show after you miss the whole first week because your roommate’s boyfriend’s mother tested positive for COVID. You realize it’s time to reconsider your career path and follow a more pragmatic passion. How about coding?');
 
-API.add(18, null, 'Move home', 'win', 'You’ve got to know when to fold ‘em, and you’ve given it the ol’ college try, so you take a step back and a deep breath and ask your mom to take you back while you go through a coding bootcamp and chart a more practical trajectory.');
+API.add(18, null, 'Move home', 'losd', 'You’ve got to know when to fold ‘em, and you’ve given it the ol’ college try, so you take a step back and a deep breath and ask your mom to take you back while you go through a coding bootcamp and chart a more practical trajectory.');
 
-API.add(20, null, 'Soul-crushing loan A', 'win', 'You were born for the stage! It would be a shame not to invest in your craft! You use the loans to quit working and allow you to focus full-time on your studies. One day, you’ll make it big!');
+API.add(20, null, 'Soul-crushing loan A', 'lose', 'You were born for the stage! It would be a shame not to invest in your craft! You use the loans to quit working and allow you to focus full-time on your studies. One day, you’ll make it big!');
 
 API.add(22, null, 'Soul-crushing loan B', 'win', 'You move back in with your mom in South Jersey and use your loan to pay for a coding bootcamp. Look at you, being all responsible!');
 
-API.add(24, null, 'Yes', 'win', 'Yes! Who knows--maybe one of the actors will get sick and you will be called on as their understudy? The show must go on!');
+API.add(24, null, 'Yes', 'lose', 'Yes! Who knows--maybe one of the actors will get sick and you will be called on as their understudy? The show must go on!');
 
 API.add(26, null, 'No', 'win', 'No. This is a sign that your talent will never be appreciated. You instead channel your creativity into a coding bootcamp.');
 
