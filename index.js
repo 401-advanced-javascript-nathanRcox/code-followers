@@ -29,18 +29,13 @@ catch(error) {
 
 const server = require('./src/server');
 
-let node = API.root;
 
-let response = {};
-response.value = {}
-//response.type = null;
-response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
 
 function getTitles (currentNode){
   if (!currentNode) throw new Error;
   let arrayOfTitles = [];
-  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, description:currentNode.left.description, value: currentNode.left, type: currentNode.left.type});
-  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, description:currentNode.right.description, value: currentNode.right, type: currentNode.right.type});
+  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type});
+  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
   //console.log(arrayOfTitles);
   return arrayOfTitles;
 }
@@ -61,19 +56,10 @@ function getTitles (currentNode){
   }
 })();
 
-const signupQuestions = [
-  {
-    type: 'text',
-    name: 'username',
-    message: 'What is your username?'
-  },
-  {
-    type: 'invisible',
-    name: 'password',
-    message: 'What is your password?'
-  },
-];
 
+
+
+function signin(){
 const signinQuestions = [
   {
     type: 'text',
@@ -81,13 +67,11 @@ const signinQuestions = [
     message: 'What is your username?'
   },
   {
-    type: 'text',
+    type: 'password',
     name: 'password',
     message: 'What is your password?'
   },
 ];
-
-function signin(){
   let token;
   (async () => {
     try{
@@ -96,7 +80,6 @@ function signin(){
       .auth(response.username, response.password)
       token = results.body.user.token
       console.log(`${response.username}, you have successfully logged in!`)
-      console.log('------------------------')
 
       renderGame();
     }
@@ -107,6 +90,18 @@ function signin(){
 }
  
 function signup(){
+  const signupQuestions = [
+    {
+      type: 'text',
+      name: 'username',
+      message: 'What is your username?'
+    },
+    {
+      type: 'password',
+      name: 'password',
+      message: 'What is your password?'
+    },
+  ];
   (async () => {
     const response = await prompts(signupQuestions);
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
@@ -118,11 +113,34 @@ function signup(){
    })();
 }
 
+function playAgain() {
+  (async () => {
+    const response = await prompts({
+      type: 'toggle',
+      name: 'value',
+      message: 'Do you want to play again',
+      initial: true,
+      active: 'yes',
+      inactive: 'no'
+    });
+    if (response.value === false){
+      console.log(`Game Over!! :((`)
+    } else if (response.value === true){
+      renderGame();
+    }
+  })()
+}
 
  function renderGame(){
+  let node = API.root;
+
+  let response = {};
+  response.value = {}
+  //response.type = null;
+  response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
    (async () => {
-   
      while (true) {
+       console.log(`-----------------------------------`)
      response = await prompts({
          type: 'select',
          //type: node.type,
@@ -135,13 +153,9 @@ function signup(){
        console.log(response.value.description);
        break;
      }
-     //console.log(`This is the response message:"${response.value.description}".`)
      node = response.value;
-     // console.log(`This is the id of what the user picked ${response.value.value}`);
-     // console.log(`This is the left node's id: ${node.left.value}`);
-     // console.log(`This is the right node's id: ${node.right.value}`);
    }
-   
+   playAgain();
    })();
 
 
