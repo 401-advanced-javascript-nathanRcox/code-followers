@@ -1,7 +1,7 @@
 'use strict';
 
-
 const API = require('./API');
+const server = require('./src/server');
 
 //third party dependancies
 const prompts = require('prompts');
@@ -17,19 +17,8 @@ const options = {
 };
 
 //Connect to the Mongo DB
-try{
-  mongoose.connect(process.env.MONGODB_URI, options);
-
-  // Start the web server
-  //server.start(process.env.PORT);
-}
-catch(error) {
-    console.error('Could not start up server: ', error);
-}
-
-const server = require('./src/server');
-
-
+try{ mongoose.connect(process.env.MONGODB_URI, options) }
+catch(error) { console.error('Could not start up server: ', error) }
 
 function getTitles (currentNode){
   if (!currentNode) throw new Error;
@@ -56,10 +45,7 @@ function getTitles (currentNode){
   }
 })();
 
-
-
-
-function signin(){
+function signin() {
 const signinQuestions = [
   {
     type: 'text',
@@ -78,7 +64,7 @@ const signinQuestions = [
       const response = await prompts(signinQuestions);
       const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
       .auth(response.username, response.password)
-      token = results.body.user.token
+      token = results.body.user.token;
       console.log(`${response.username}, you have successfully logged in!`)
 
       renderGame();
@@ -150,18 +136,15 @@ function playAgain() {
          choices: getTitles(node),
      });
      if (!response.value.left && !response.value.right) {
-       console.log(response.value.description);
-       break;
-     }
+      console.log(response.value.description);
+      if (counter >= 2) console.log(`You've won(!) with a final score of ${counter}.`)
+      else console.log(`You've lost(!) with a final score of ${counter}.`);
+      break;
+    };
      node = response.value;
    }
    playAgain();
-   })();
-
-
-
- }
-
-
+  })();
+}
 
 server.start(process.env.PORT);
