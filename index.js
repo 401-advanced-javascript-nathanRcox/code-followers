@@ -1,7 +1,7 @@
 'use strict';
 
-
 const API = require('./API');
+const server = require('./src/server');
 
 //third party dependancies
 const prompts = require('prompts');
@@ -17,30 +17,14 @@ const options = {
 };
 
 //Connect to the Mongo DB
-try{
-  mongoose.connect(process.env.MONGODB_URI, options);
-
-  // Start the web server
-  //server.start(process.env.PORT);
-}
-catch(error) {
-    console.error('Could not start up server: ', error);
-}
-
-const server = require('./src/server');
-
-let node = API.root;
-
-let response = {};
-response.value = {}
-//response.type = null;
-response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
+try { mongoose.connect(process.env.MONGODB_URI, options) }
+catch(error) { console.error('Could not start up server: ', error) }
 
 function getTitles (currentNode){
   if (!currentNode) throw new Error;
   let arrayOfTitles = [];
-  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, description:currentNode.left.description, value: currentNode.left, type: currentNode.left.type});
-  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, description:currentNode.right.description, value: currentNode.right, type: currentNode.right.type});
+  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type});
+  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
   //console.log(arrayOfTitles);
   return arrayOfTitles;
 }
@@ -61,19 +45,7 @@ function getTitles (currentNode){
   }
 })();
 
-const signupQuestions = [
-  {
-    type: 'text',
-    name: 'username',
-    message: 'What is your username?'
-  },
-  {
-    type: 'invisible',
-    name: 'password',
-    message: 'What is your password?'
-  },
-];
-
+function signin() {
 const signinQuestions = [
   {
     type: 'text',
@@ -81,73 +53,112 @@ const signinQuestions = [
     message: 'What is your username?'
   },
   {
-    type: 'text',
+    type: 'password',
     name: 'password',
     message: 'What is your password?'
   },
 ];
-
-function signin(){
   let token;
   (async () => {
-    try{
+    try {
       const response = await prompts(signinQuestions);
       const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
-      .auth(response.username, response.password)
-      token = results.body.user.token
-      console.log(`${response.username}, you have successfully logged in!`)
-      console.log('------------------------')
+      .auth(response.username, response.password);
+      token = results.body.user.token;
+      console.log(`${response.username}, welcome back!`);
 
       renderGame();
     }
-    catch{
+    catch {
       (e => console.error('this is an error!', e))
-    }
+    };
    })();
 }
  
-function signup(){
+function signup() {
+  const signupQuestions = [
+    {
+      type: 'text',
+      name: 'username',
+      message: 'What is your username?'
+    },
+    {
+      type: 'password',
+      name: 'password',
+      message: 'What is your password?'
+    },
+  ];
   (async () => {
     const response = await prompts(signupQuestions);
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
     .send(response)
-    .then(results => {console.log(`Welcome, ${response.username}!`)})
+    .then(results => {console.log(`Welcome, ${results.username}!`)})
+    .catch(e => console.error('This is an error!', e))
     console.log('------------------------')
-    .catch(e => console.error('this is an error!', e))
     renderGame();
    })();
 }
 
+function tallyScore(counter) {
+  // let score = counter.toString();
+  let score = { counter }
+  console.log('SCORE:', score);
+  superagent.put(`https://code-followers-dev.herokuapp.com/update-score`)
+  .send(score)
+  .then(results => console.log('RESULTS:', results))
+  .catch(e => console.error('You\'re not getting there.'));
+};
+
+function playAgain() {
+  (async () => {
+    const response = await prompts({
+      type: 'toggle',
+      name: 'value',
+      message: 'Do you want to play again',
+      initial: true,
+      active: 'yes',
+      inactive: 'no'
+    });
+    if (response.value === false){
+      tallyScore(counter);
+      console.log('Thanks for playing! Exit by typing control+c.');
+    } else if (response.value === true){
+      renderGame();
+    }
+  })()
+}
+let counter = 0;
 
  function renderGame(){
+  let node = API.root;
+  // let counter = 0;
+  let response = {};
+  response.value = {}
+  response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
    (async () => {
-   
      while (true) {
-     response = await prompts({
-         type: 'select',
-         //type: node.type,
-         name: 'value',
-         message: response.value.description,
-         //message: node.description,
-         choices: getTitles(node),
+       console.log(`-----------------------------------`)
+      response = await prompts({
+      type: 'select',
+      name: 'value',
+      message: response.value.description,
+      choices: getTitles(node),
      });
+     if (response.value.status === 'win') {
+      console.log(`You've chosen wisely. You've won a point, and your current score is ${++counter}.`)
+    } else if (response.value.status === 'lose') {
+      console.log(`You've chosen poorly. You've lost a point, and your current score is ${--counter}.`);
+    };
      if (!response.value.left && !response.value.right) {
-       console.log(response.value.description);
-       break;
-     }
-     //console.log(`This is the response message:"${response.value.description}".`)
+      console.log(response.value.description);
+      if (counter >= 2) console.log(`You've won(!) with a final score of ${counter}.`)
+      else console.log(`You've lost(!) with a final score of ${counter}.`);
+      break;
+    };
      node = response.value;
-     // console.log(`This is the id of what the user picked ${response.value.value}`);
-     // console.log(`This is the left node's id: ${node.left.value}`);
-     // console.log(`This is the right node's id: ${node.right.value}`);
    }
-   
-   })();
-
-
-
- }
-
-
+   playAgain();
+  })();
+}
 
 server.start(process.env.PORT);

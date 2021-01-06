@@ -69,7 +69,7 @@ class BinaryTree {
 let API = new BinaryTree;
 API.add(15, 'select', 'Start', 'win', 'You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?');
 
-API.add(13, 'select', 'Coding', 'win', 'Now that you’ve made the choice to learn to code, you must choose between learning independently or attending a bootcamp. Which do you choose?');
+API.add(7, 'select', 'Coding', 'win', 'Now that you’ve made the choice to learn to code, you must choose between learning independently or attending a bootcamp. Which do you choose?');
 
 API.add(23, 'select', 'Acting', 'win', 'You’ve always dreamt of becoming an actor, but dreams won’t tile your floors, let alone vacuum them. Now you have to act! What will you do first?');
 
