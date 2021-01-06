@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('Console Logs', () => {
+describe('Console Logs', () => {
   let consoleSpy;
   beforeEach(() => {
     // Attach to the console
@@ -12,8 +12,7 @@ xdescribe('Console Logs', () => {
     consoleSpy.mockRestore();
   });
 
-  it('picks up an order', () => {
-    caps.emit('pickup', {orderID: 1});
+  it('renders a console.log', () => {
     setTimeout(() => { expect(consoleSpy).toHaveBeenCalled(); }, 1000);
   });
 
