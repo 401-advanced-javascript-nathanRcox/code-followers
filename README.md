@@ -24,3 +24,6 @@
 
 <!-- [Heroku Main Deploy](https://code-followers.herokuapp.com/)
 [Heroku Dev Deploy](https://code-followers-dev.herokuapp.com/) -->
+
+## Sources
+[Text Adventures by Salif Mehmed](https://github.com/salifm/cli-games/tree/master/TextAdventures)
