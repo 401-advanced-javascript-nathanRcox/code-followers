@@ -159,8 +159,17 @@ let counter = 0;
     };
      node = response.value;
    }
+   
+   })();
+
+
+
+ }
+
+
+ 
+ module.exports = {getTitles, renderGame, signin, signup};
+ server.start(process.env.PORT);
    playAgain();
   })();
 }
-
-server.start(process.env.PORT);
