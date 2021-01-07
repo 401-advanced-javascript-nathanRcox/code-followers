@@ -7,6 +7,7 @@ const User = require('../users/user-model');
 const basicAuth = require('../middleware/basic')
 const bearerAuth = require('../middleware/bearer')
 const permissions = require('../middleware/acl')
+// mongoose.set('useFindAndModify', false);
 
 authRouter.post('/signup', async (req, res, next) => {
   try {
@@ -32,11 +33,18 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 });
 
 // Update a user's profile with score and location (level). 
-authRouter.post('/update-score', async (req, res, next) => {
-  console.log('REQ.BODY:', req.body);
-  let scoreAndLocation = req.body;
-  // const updateRecord = await 
-})
+authRouter.put('/update-score/:userId', async (req, res, next) => {
+  let body = req.body; // e.g. { counter: -2 }
+  let id = req.params.userId;
 
+  let data;
+
+    data = await User.findByIdAndUpdate(id, { $set: { score: body.counter }},
+    { new: true })
+    .exec((err, result) => {
+      if (err) { return res.status(422).json( {error: 'Another one bites the dust.'})}
+      res.status(200).json(result);
+    })
+  })
 
 module.exports = authRouter;
