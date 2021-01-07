@@ -116,15 +116,15 @@ function signup() {
     .then(results => {
       console.log(`Welcome, ${results.body.user.username}!`);
       let userId = results.body.user._id;
-      renderGame(userId);
+      // renderGame(userId);
+      doYouWantToPlay(userId);
     })
     .catch(e => console.error('This is a sign-up error!', e.message))
     console.log('------------------------')
-    doYouWantToPlay();
   })();
 }
 
-function doYouWantToPlay() {
+function doYouWantToPlay(userId) {
   (async () => {
     const response = await prompts({
       type: 'toggle',
@@ -137,7 +137,7 @@ function doYouWantToPlay() {
     if (response.value === false) {
       console.log(`Fine Then Don't Play!! :((`)
     } else if (response.value === true) {
-      renderGame();
+      renderGame(userId);
     }
   })()
 }
