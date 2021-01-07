@@ -65,21 +65,16 @@ function signin() {
   (async () => {
     try {
       const response = await prompts(signinQuestions);
-      // const results = await superagent.post(`${process.env.PORT}`)
-
-      const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
-
-        .auth(response.username, response.password)
-      token = results.body.user.token;
-      console.log(`${response.username}, you have successfully logged in!`)
-      doYouWantToPlay();
-      //if user not found res.status400 json errormessage
-      //prompt to sign up
-      //if they want to signup send them to signup function
-      //if they want to not signup send them to the top of the signin
+      setTimeout(async ()=>{
+        const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+          .auth(response.username, response.password)
+        token = results.body.user.token;
+        console.log(`${response.username}, you have successfully logged in!`)
+        doYouWantToPlay();      
+      }, 3000);
+      console.log('Incorrect login. Please try again')
     }
     catch {
-      
       (e => console.error('this is an error!', e))
     }
   })();
@@ -189,18 +184,11 @@ function renderGame() {
     };
      node = response.value;
    }
-   
+    playAgain();
    })();
-
-
-
  }
 
 
  
  module.exports = {getTitles, renderGame, signin, signup};
  server.start(process.env.PORT);
-   playAgain();
-
-  })();
-}
