@@ -48,6 +48,15 @@ function getTitles(currentNode) {
   }
 })();
 
+async function validateSignin(){
+  const response = await prompts(signinQuestions);
+    const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+      .auth(response.username, response.password)
+    token = results.body.user.token;
+    console.log(`${response.username}, you have successfully logged in!`)
+    doYouWantToPlay();
+}
+
 function signin() {
   const signinQuestions = [
     {
@@ -64,21 +73,24 @@ function signin() {
   let token;
   (async () => {
     try {
-      const response = await prompts(signinQuestions);
-      setTimeout(async ()=>{
-        const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
-          .auth(response.username, response.password)
-        token = results.body.user.token;
-        console.log(`${response.username}, you have successfully logged in!`)
-        doYouWantToPlay();      
-      }, 3000);
-      console.log('Incorrect login. Please try again')
+        const response = await prompts(signinQuestions);
+          const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+            .auth(response.username, response.password)
+          token = results.body.user.token;
+          console.log(`${response.username}, you have successfully logged in!`)
+          doYouWantToPlay();
+      }
+      catch {
+        (e => console.error('this is an error!', e))
+      }
+      finally {
+      if(!token) {
+        console.log('incorrect login. Press CTRL + C to retry');
     }
-    catch {
-      (e => console.error('this is an error!', e))
-    }
+  }
   })();
 }
+
 
 function signup() {
   const signupQuestions = [
