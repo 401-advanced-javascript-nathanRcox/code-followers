@@ -23,12 +23,13 @@ let counter = 0;
 
 //Connect to the Mongo DB
 try { mongoose.connect(process.env.MONGODB_URI, options) }
-
 catch (error) { console.error('Could not start up server: ', error) }
 
 function getTitles(currentNode) {
   if (!currentNode) throw new Error;
   let arrayOfTitles = [];
+  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type});
+  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
   if (currentNode.left) arrayOfTitles.push({ title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type });
   if (currentNode.right) arrayOfTitles.push({ title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type });
   //console.log(arrayOfTitles);
@@ -58,7 +59,7 @@ async function validateSignin(){
     token = results.body.user.token;
     console.log(`${response.username}, you have successfully logged in!`)
     doYouWantToPlay();
-}
+};
 
 function signin() {
   const signinQuestions = [
@@ -83,8 +84,8 @@ function signin() {
           console.log(`${response.username}, you have successfully logged in!`)
       let userId = results.body.user._id;
       renderGame(userId);      
-      catch {
-        (e => console.error('this is an error!', e))
+    } catch {
+        (e => console.error('this is a sign-in error!', e.message))
       }
       finally {
       if(!token) {
@@ -93,7 +94,6 @@ function signin() {
   }
   })();
 }
-
 
 function signup() {
   const signupQuestions = [
@@ -112,14 +112,13 @@ function signup() {
     const response = await prompts(signupQuestions);
     //  await superagent.post(`http://localhost:${process.env.PORT}/signup`)
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
-
     .send(response)
     .then(results => {
       console.log(`Welcome, ${results.body.user.username}!`);
       let userId = results.body.user._id;
       renderGame(userId);
     })
-    .catch(e => console.error('This is an error!', e))
+    .catch(e => console.error('This is a sign-up error!', e.message))
     console.log('------------------------')
     doYouWantToPlay();
   })();
@@ -170,19 +169,17 @@ function playAgain(userId) {
       renderGame(userId);
     }
   })()
-}
+};
 
- function renderGame(userId){
-
+function renderGame() {
   let node = API.root;
-  // let counter = 0;
   let response = {};
-  response.value = {}
+  response.value = {};
   response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
 
    (async () => {
      while (true) {
-       console.log(`-----------------------------------`)
+      console.log(`-----------------------------------`)
       response = await prompts({
       type: 'select',
       name: 'value',
@@ -204,9 +201,8 @@ function playAgain(userId) {
    }
    playAgain(userId);
   })();
-}
-
-
+};
  
  module.exports = {getTitles, renderGame, signin, signup};
+
  server.start(process.env.PORT);
