@@ -21,6 +21,7 @@ authRouter.post('/signup', async (req, res, next) => {
     next(e.message)
   }
 });
+
 //sign in w/ bearer token created when user signed up
 authRouter.post('/signin', basicAuth, (req, res, next) => {
   const user = {
@@ -30,5 +31,12 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
   res.status(200).json(user);
 });
 
-module.exports = authRouter;
+// Update a user's profile with score and location (level). 
+authRouter.post('/update-score', async (req, res, next) => {
+  console.log('REQ.BODY:', req.body);
+  let scoreAndLocation = req.body;
+  // const updateRecord = await 
+})
 
+
+module.exports = authRouter;

@@ -20,6 +20,7 @@ const options = {
 
 //Connect to the Mongo DB
 try { mongoose.connect(process.env.MONGODB_URI, options) }
+
 catch (error) { console.error('Could not start up server: ', error) }
 
 function getTitles(currentNode) {
@@ -64,7 +65,10 @@ function signin() {
   (async () => {
     try {
       const response = await prompts(signinQuestions);
+      // const results = await superagent.post(`${process.env.PORT}`)
+
       const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+
         .auth(response.username, response.password)
       token = results.body.user.token;
       console.log(`${response.username}, you have successfully logged in!`)
@@ -97,9 +101,11 @@ function signup() {
   (async () => {
     const response = await prompts(signupQuestions);
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
+
       .send(response)
       .then(results => { console.log(`Welcome, ${response.username}!`) })
       .catch(e => console.error('this is an error!', e))
+
     console.log('------------------------')
     doYouWantToPlay();
   })();
@@ -123,6 +129,16 @@ function doYouWantToPlay() {
   })()
 }
 
+function tallyScore(counter) {
+  // let score = counter.toString();
+  let score = { counter }
+  console.log('SCORE:', score);
+  superagent.post(`https://code-followers-dev.herokuapp.com/update-score`)
+  .send(score)
+  .then(results => console.log('RESULTS:', results))
+  .catch(e => console.error('You\'re not getting there.'));
+};
+
 function playAgain() {
   (async () => {
     const response = await prompts({
@@ -133,43 +149,58 @@ function playAgain() {
       active: 'yes',
       inactive: 'no'
     });
+
     if (response.value === false) {
       console.log(`Game Over!! :((`)
     } else if (response.value === true) {
+
       renderGame();
     }
   })()
 }
+let counter = 0;
 
 function renderGame() {
   let node = API.root;
-
+  // let counter = 0;
   let response = {};
   response.value = {}
-  //response.type = null;
   response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
-  (async () => {
-    while (true) {
-      console.log(`-----------------------------------`)
+
+   (async () => {
+     while (true) {
+       console.log(`-----------------------------------`)
       response = await prompts({
-        type: 'select',
-        //type: node.type,
-        name: 'value',
-        message: response.value.description,
-        //message: node.description,
-        choices: getTitles(node),
-      });
-      if (!response.value.left && !response.value.right) {
-        console.log(response.value.description);
-        let counter
-        if (counter >= 2) console.log(`You've won(!) with a final score of ${counter}.`)
-        else console.log(`You've lost(!) with a final score of ${counter}.`);
-        break;
-      };
-      node = response.value;
-    }
-    playAgain();
+      type: 'select',
+      name: 'value',
+      message: response.value.description,
+      choices: getTitles(node),
+     });
+     if (response.value.status === 'win') {
+      console.log(`You've chosen wisely. You've won a point, and your current score is ${++counter}.`)
+    } else if (response.value.status === 'lose') {
+      console.log(`You've chosen poorly. You've lost a point, and your current score is ${--counter}.`);
+    };
+     if (!response.value.left && !response.value.right) {
+      console.log(response.value.description);
+      if (counter >= 2) console.log(`You've won(!) with a final score of ${counter}.`)
+      else console.log(`You've lost(!) with a final score of ${counter}.`);
+      break;
+    };
+     node = response.value;
+   }
+   
+   })();
+
+
+
+ }
+
+
+ 
+ module.exports = {getTitles, renderGame, signin, signup};
+ server.start(process.env.PORT);
+   playAgain();
+
   })();
 }
-
-server.start(process.env.PORT);
