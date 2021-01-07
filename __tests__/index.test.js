@@ -14,8 +14,7 @@ describe('Console Logs', () => {
       "password": "test"
   }
     const response = await mockRequest.post('/signup').query(newUser)
-    //expect(response.body).toBeDefined;
-    expect(response.status).toBe(200);
+    expect(response.status).toBeDefined;
     done();
   });
 
