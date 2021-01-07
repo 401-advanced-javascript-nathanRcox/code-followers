@@ -6,7 +6,7 @@
 
 ## Domain Model
 
-[Domain Model](./assets/groupProject.jpg)
+[Domain Model](./assets/UML.jpg)
 
 ## Project Management Tool
 
