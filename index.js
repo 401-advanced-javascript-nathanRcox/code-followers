@@ -28,11 +28,9 @@ catch (error) { console.error('Could not start up server: ', error) }
 function getTitles(currentNode) {
   if (!currentNode) throw new Error;
   let arrayOfTitles = [];
-  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type});
-  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
   if (currentNode.left) arrayOfTitles.push({ title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type });
-  if (currentNode.right) arrayOfTitles.push({ title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type });
-  //console.log(arrayOfTitles);
+  if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
+  // console.log(arrayOfTitles);
   return arrayOfTitles;
 }
 
@@ -40,7 +38,7 @@ function getTitles(currentNode) {
   const response = await prompts({
     type: 'toggle',
     name: 'value',
-    message: 'Do you want to sign up or sign in?',
+    message: 'Welcome to Code Followers, a text-based game of risk and reward. Before you can play, please sign up or sign in.',
     initial: true,
     active: 'sign up',
     inactive: 'sign in'
@@ -51,15 +49,6 @@ function getTitles(currentNode) {
     signup();
   }
 })();
-
-async function validateSignin(){
-  const response = await prompts(signinQuestions);
-    const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
-      .auth(response.username, response.password)
-    token = results.body.user.token;
-    console.log(`${response.username}, you have successfully logged in!`)
-    doYouWantToPlay();
-};
 
 function signin() {
   const signinQuestions = [
@@ -117,10 +106,11 @@ function signup() {
       console.log(`Welcome, ${results.body.user.username}!`);
       let userId = results.body.user._id;
       // renderGame(userId);
+      console.log('------------------------')
+
       doYouWantToPlay(userId);
     })
     .catch(e => console.error('This is a sign-up error!', e.message))
-    console.log('------------------------')
   })();
 }
 
@@ -171,7 +161,7 @@ function playAgain(userId) {
   })()
 };
 
-function renderGame() {
+function renderGame(userId) {
   let node = API.root;
   let response = {};
   response.value = {};
