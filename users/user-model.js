@@ -23,7 +23,7 @@ users.virtual('token').get(function () {
 
 users.virtual('capabilities').get(function () {
   let acl = {
-    user: ['read'],
+    user: ['read', 'update'],
    
   };
   return acl[this.role];
