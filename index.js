@@ -144,5 +144,6 @@ function signup(){
  }
 
 
-
-server.start(process.env.PORT);
+ 
+ module.exports = {getTitles, renderGame, signin, signup};
+ server.start(process.env.PORT);
