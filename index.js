@@ -8,13 +8,16 @@ const prompts = require('prompts');
 require('dotenv').config();
 const superagent = require('superagent');
 
-// Start up DB Server
+// Database
 const mongoose = require('mongoose');
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
 };
+mongoose.set('useFindAndModify', false); // This removes the notice of deprecation of findByIdAndUpdate.
+
+let counter = 0;
 
 //Connect to the Mongo DB
 try { mongoose.connect(process.env.MONGODB_URI, options) }
@@ -62,14 +65,12 @@ const signinQuestions = [
   (async () => {
     try {
       const response = await prompts(signinQuestions);
-      // const results = await superagent.post(`${process.env.PORT}`)
-
-      const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+      const results = await superagent.post(`http://localhost:${process.env.PORT}/signin`)
       .auth(response.username, response.password);
       token = results.body.user.token;
       console.log(`${response.username}, welcome back!`);
-
-      renderGame();
+      let userId = results.body.user._id;
+      renderGame(userId);
     }
     catch {
       (e => console.error('this is an error!', e))
@@ -92,26 +93,30 @@ function signup() {
   ];
   (async () => {
     const response = await prompts(signupQuestions);
-    await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
+    await superagent.post(`http://localhost:${process.env.PORT}/signup`)
     .send(response)
-    .then(results => {console.log(`Welcome, ${results.username}!`)})
+
+    .then(results => {
+      console.log(`Welcome, ${results.body.user.username}!`);
+      let userId = results.body.user._id;
+      renderGame(userId);
+    })
     .catch(e => console.error('This is an error!', e))
     console.log('------------------------')
-    renderGame();
    })();
 }
 
-function tallyScore(counter) {
-  // let score = counter.toString();
-  let score = { counter }
-  console.log('SCORE:', score);
-  superagent.post(`https://code-followers-dev.herokuapp.com/update-score`)
-  .send(score)
-  .then(results => console.log('RESULTS:', results))
-  .catch(e => console.error('You\'re not getting there.'));
+async function tallyScore(counter, userId) {
+
+  await superagent.put(`http://localhost:${process.env.PORT}/update-score/${userId}`)
+
+  // superagent.put(`https://code-followers-dev.herokuapp.com/update-score`)
+  .send({ counter })
+  // .then(results => console.log('RESULTS:', results))
+  .catch(e => console.error(e, 'Banana Cream Pie.'));
 };
 
-function playAgain() {
+function playAgain(userId) {
   (async () => {
     const response = await prompts({
       type: 'toggle',
@@ -122,16 +127,15 @@ function playAgain() {
       inactive: 'no'
     });
     if (response.value === false){
-      tallyScore(counter);
+      tallyScore(counter, userId);
       console.log('Thanks for playing! Exit by typing control+c.');
     } else if (response.value === true){
-      renderGame();
+      renderGame(userId);
     }
   })()
 }
-let counter = 0;
 
- function renderGame(){
+ function renderGame(userId){
   let node = API.root;
   // let counter = 0;
   let response = {};
@@ -159,7 +163,7 @@ let counter = 0;
     };
      node = response.value;
    }
-   playAgain();
+   playAgain(userId);
   })();
 }
 
