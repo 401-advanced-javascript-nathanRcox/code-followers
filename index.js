@@ -130,6 +130,7 @@ function playAgain(userId) {
       tallyScore(counter, userId);
       console.log('Thanks for playing! Exit by typing control+c.');
     } else if (response.value === true){
+      tallyScore(counter, userId); // This could be a high-score counter. 
       renderGame(userId);
     }
   })()
