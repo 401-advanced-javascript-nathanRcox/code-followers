@@ -23,9 +23,9 @@ catch(error) { console.error('Could not start up server: ', error) }
 function getTitles (currentNode){
   if (!currentNode) throw new Error;
   let arrayOfTitles = [];
-  if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type});
+  if (currentNode.left) arrayOfTitles.push({ title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type });
   if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
-  //console.log(arrayOfTitles);
+  // console.log(arrayOfTitles);
   return arrayOfTitles;
 }
  
@@ -33,7 +33,7 @@ function getTitles (currentNode){
   const response = await prompts({
     type: 'toggle',
     name: 'value',
-    message: 'Do you want to sign up or sign in?',
+    message: 'Welcome to Code Followers, a text-based game of risk and reward. Before you can play, please sign up or sign in.',
     initial: true,
     active: 'sign up',
     inactive: 'sign in'
@@ -94,11 +94,34 @@ function signup() {
     const response = await prompts(signupQuestions);
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
     .send(response)
-    .then(results => {console.log(`Welcome, ${results.username}!`)})
-    .catch(e => console.error('This is an error!', e))
-    console.log('------------------------')
-    renderGame();
-   })();
+    .then(results => {
+      console.log(`Welcome, ${results.body.user.username}!`);
+      let userId = results.body.user._id;
+      // renderGame(userId);
+      console.log('------------------------')
+
+      doYouWantToPlay(userId);
+    })
+    .catch(e => console.error('This is a sign-up error!', e.message))
+  })();
+}
+
+function doYouWantToPlay(userId) {
+  (async () => {
+    const response = await prompts({
+      type: 'toggle',
+      name: 'value',
+      message: 'Do you want to play a game',
+      initial: true,
+      active: 'yes',
+      inactive: 'no'
+    });
+    if (response.value === false) {
+      console.log(`Fine Then Don't Play!! :((`)
+    } else if (response.value === true) {
+      renderGame(userId);
+    }
+  })()
 }
 
 function tallyScore(counter) {
@@ -131,7 +154,8 @@ function playAgain() {
 }
 let counter = 0;
 
- function renderGame(){
+
+function renderGame(userId) {
   let node = API.root;
   // let counter = 0;
   let response = {};
