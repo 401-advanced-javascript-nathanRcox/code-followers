@@ -5,7 +5,7 @@ const users = require('../users/user-model')
 module.exports = async (req, res, next) => {
 
   try {
-
+    console.log('BEARER-AUTH:', req.headers.authorization);
     if (!req.headers.authorization) { _authError() }
 
     const token = req.headers.authorization.split(' ').pop();

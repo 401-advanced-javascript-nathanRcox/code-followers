@@ -87,7 +87,7 @@ API.add(5, 'select', 'Bootcamp', 'win', 'You were recommended to Code Fellows by
 
 API.add(9, 'select', 'No', 'lose', 'You saw an amazing mime act on the subway and decided to start filming. Do you try to make a living creating a YouTube channel or are you now inspired to paint your face, become a clown, and run off with the circus because you regret not learning software development.');
 
-API.add(13, 'select', 'Bootcamp', 'win', 'Although your hands are trembling and your eye is twitching from drinking three pots of coffee, you wrote one line of JavaScript without using Google and you’ve caught the coding bug. You can continue learning JavaScript and to become a full-stack developer or learn Python and become a back-end developer because you can’t handle the freedom and democratic nature of JavaScript.');
+API.add(13, 'select', 'Yes', 'win', 'Although your hands are trembling and your eye is twitching from drinking three pots of coffee, you wrote one line of JavaScript without using Google and you’ve caught the coding bug. You can continue learning JavaScript and to become a full-stack developer or learn Python and become a back-end developer because you can’t handle the freedom and democratic nature of JavaScript.');
 
 API.add(17, 'select', 'Miming', 'lose', 'Your mom always said you had expressive eyes, so you start up a mime act in the subway, only to realize that you’re SO good, nobody can see you and you make no money. Do you keep on keepin’ on or do you move back in with Mom?');
 

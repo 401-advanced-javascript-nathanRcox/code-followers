@@ -2,32 +2,41 @@
 
 const API = require('./API');
 const server = require('./src/server');
+const users = require('./users/user-model');
 
 //third party dependancies
 const prompts = require('prompts');
 require('dotenv').config();
 const superagent = require('superagent');
 
-// Start up DB Server
+// Database
 const mongoose = require('mongoose');
+const { response } = require('express');
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
 };
+mongoose.set('useFindAndModify', false); // This removes the notice of deprecation of findByIdAndUpdate.
+
+let counter = 0;
 
 //Connect to the Mongo DB
-try{ mongoose.connect(process.env.MONGODB_URI, options) }
-catch(error) { console.error('Could not start up server: ', error) }
+try { mongoose.connect(process.env.MONGODB_URI, options) }
 
-function getTitles (currentNode){
+catch (error) { console.error('Could not start up server: ', error) }
+
+function getTitles(currentNode) {
   if (!currentNode) throw new Error;
   let arrayOfTitles = [];
   if (currentNode.left) arrayOfTitles.push({title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type});
   if (currentNode.right) arrayOfTitles.push({title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type});
+  if (currentNode.left) arrayOfTitles.push({ title: currentNode.left.name, value: currentNode.left, type: currentNode.left.type });
+  if (currentNode.right) arrayOfTitles.push({ title: currentNode.right.name, value: currentNode.right, type: currentNode.right.type });
+  //console.log(arrayOfTitles);
   return arrayOfTitles;
 }
- 
+
 (async () => {
   const response = await prompts({
     type: 'toggle',
@@ -37,44 +46,57 @@ function getTitles (currentNode){
     active: 'sign up',
     inactive: 'sign in'
   });
-  if (response.value === false){
+  if (response.value === false) {
     signin();
-  } else if (response.value === true){
+  } else if (response.value === true) {
     signup();
   }
 })();
 
+async function validateSignin(){
+  const response = await prompts(signinQuestions);
+    const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+      .auth(response.username, response.password)
+    token = results.body.user.token;
+    console.log(`${response.username}, you have successfully logged in!`)
+    doYouWantToPlay();
+}
+
 function signin() {
-const signinQuestions = [
-  {
-    type: 'text',
-    name: 'username',
-    message: 'What is your username?'
-  },
-  {
-    type: 'password',
-    name: 'password',
-    message: 'What is your password?'
-  },
-];
+  const signinQuestions = [
+    {
+      type: 'text',
+      name: 'username',
+      message: 'What is your username?'
+    },
+    {
+      type: 'password',
+      name: 'password',
+      message: 'What is your password?'
+    },
+  ];
   let token;
   (async () => {
-    try{
-      const response = await prompts(signinQuestions);
-      const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
-      .auth(response.username, response.password)
-      token = results.body.user.token;
-      console.log(`${response.username}, you have successfully logged in!`)
+    try {
+        const response = await prompts(signinQuestions);
+          const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+            .auth(response.username, response.password)
+          token = results.body.user.token;
+          console.log(`${response.username}, you have successfully logged in!`)
+      let userId = results.body.user._id;
+      renderGame(userId);      
+    } catch {
+        (e => console.error('this is an error!', e))
+      }
+      finally {
+      if(!token) {
+        console.log('incorrect login. Press CTRL + C to retry');
+    }
+  }
+})();
 
-      renderGame();
-    }
-    catch{
-      (e => console.error('this is an error!', e))
-    }
-   })();
-}
- 
-function signup(){
+
+function signup() {
   const signupQuestions = [
     {
       type: 'text',
@@ -89,16 +111,48 @@ function signup(){
   ];
   (async () => {
     const response = await prompts(signupQuestions);
+    //  await superagent.post(`http://localhost:${process.env.PORT}/signup`)
     await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
+
     .send(response)
-    .then(results => {console.log(`Welcome, ${response.username}!`)})
-    .catch(e => console.error('this is an error!', e))
+    .then(results => {
+      console.log(`Welcome, ${results.body.user.username}!`);
+      let userId = results.body.user._id;
+      renderGame(userId);
+    })
+    .catch(e => console.error('This is an error!', e))
     console.log('------------------------')
-    renderGame();
-   })();
+    doYouWantToPlay();
+  })();
 }
 
-function playAgain() {
+function doYouWantToPlay() {
+  (async () => {
+    const response = await prompts({
+      type: 'toggle',
+      name: 'value',
+      message: 'Do you want to play a game',
+      initial: true,
+      active: 'yes',
+      inactive: 'no'
+    });
+    if (response.value === false) {
+      console.log(`Fine Then Don't Play!! :((`)
+    } else if (response.value === true) {
+      renderGame();
+    }
+  })()
+}
+
+async function tallyScore(counter, userId) {
+  // await superagent.put(`http://localhost:${process.env.PORT}/update-score/${userId}`)
+  await superagent.put(`https://code-followers-dev.herokuapp.com/update-score/${userId}`)
+  .send({ counter })
+  // .then(results => console.log('RESULTS:', results))
+  .catch(e => console.error(e, 'Banana Cream Pie.'));
+};
+
+function playAgain(userId) {
   (async () => {
     const response = await prompts({
       type: 'toggle',
@@ -108,28 +162,50 @@ function playAgain() {
       active: 'yes',
       inactive: 'no'
     });
+
     if (response.value === false){
-      console.log(`Game Over!! :((`)
+      tallyScore(counter, userId);
+      console.log('Thanks for playing! Exit by typing control+c.');
     } else if (response.value === true){
-      renderGame();
+      tallyScore(counter, userId); // This could be a high-score counter. 
+      renderGame(userId);
     }
   })()
 }
 
+<<<<<<< HEAD
  function renderGame(){
   let node = API.root;
   let response = {};
   response.value = {};
+=======
+ function renderGame(userId){
+
+  let node = API.root;
+  // let counter = 0;
+  let response = {};
+  response.value = {}
+>>>>>>> 15dbd77212284a7ea136d5a8487070e09c48d298
   response.value.description = "You’ve just lost your job to the effects of a global pandemic, which has closed borders, shops, gyms, restaurants, and schools for the foreseeable future. The country has come together to protect the vulnerable and support the unemployed, so you’ve got time to pursue a career pivot. What’ll it be?";
+
    (async () => {
      while (true) {
+<<<<<<< HEAD
       console.log(`-----------------------------------`)
+=======
+       console.log(`-----------------------------------`)
+>>>>>>> 15dbd77212284a7ea136d5a8487070e09c48d298
       response = await prompts({
       type: 'select',
       name: 'value',
       message: response.value.description,
       choices: getTitles(node),
      });
+     if (response.value.status === 'win') {
+      console.log(`You've chosen wisely. You've won a point, and your current score is ${++counter}.`)
+    } else if (response.value.status === 'lose') {
+      console.log(`You've chosen poorly. You've lost a point, and your current score is ${--counter}.`);
+    };
      if (!response.value.left && !response.value.right) {
       console.log(response.value.description);
       if (counter >= 2) console.log(`You've won(!) with a final score of ${counter}.`)
@@ -138,8 +214,11 @@ function playAgain() {
     };
      node = response.value;
    }
-   playAgain();
+   playAgain(userId);
   })();
 }
 
-server.start(process.env.PORT);
+
+ 
+ module.exports = {getTitles, renderGame, signin, signup};
+ server.start(process.env.PORT);
