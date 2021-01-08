@@ -1,6 +1,6 @@
 # Software Requirements
 ## Vision
-Codefollowers is a text-based command line game. The user is given a series of prompts and choices, with the goal of making all the right choices and graduating from Code Fellows. This product will provide entertainment and levity for Code Fellows students and will be deployed to `HEROKU` so students can run it and play it at any time. 
+Codefollowers is a text-based command line game. The user is given a series of prompts and choices, with the goal of making all the right choices and graduating from Code Fellows. This product will provide entertainment and levity for Code Fellows students and will be deployed to `npm` so students can run it and play it at any time.
 
 ## Scope (In/Out)
 ### IN - What will your product do

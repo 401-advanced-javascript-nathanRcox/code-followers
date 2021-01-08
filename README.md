@@ -1,7 +1,7 @@
 # Title: Code Followers
 
 ## Description: 
-a text-based, code-or-death, choose-your-own-adventure game for the command line. Wise choices add to the user's score, while poor choices deduct from the user's score.
+A text-based, code-or-death, choose-your-own-adventure game for the command line. Wise choices add to the user's score, while poor choices deduct from the user's score.
 
 ## Authors:
 Garrett Cintron, Nathan Cox, Ashley Moore, Sara Strasner
