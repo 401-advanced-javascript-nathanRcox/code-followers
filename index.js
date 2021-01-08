@@ -197,4 +197,4 @@ function playAgain(userId) {
 
 module.exports = { getTitles, renderGame, signin, signup };
 
-server.start(process.env.PORT);
+server.start(process.env.PORT || 3000);
