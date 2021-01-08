@@ -1,6 +1,6 @@
 {
   "name": "code-followers",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "## Description: a text-based choose-your-own-adventure game to be played on the command line.",
   "main": "index.js",
   "scripts": {
