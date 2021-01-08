@@ -2,7 +2,7 @@
 //server constants
 const express = require('express');
 const app = express(); 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const notFoundHandler = require('./error-handlers/404');
 const authRoute = require('../routes/routes');
 const logger = require('../middleware/logger');
