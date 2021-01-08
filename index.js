@@ -13,7 +13,7 @@ const superagent = require('superagent');
 
 // Database
 const mongoose = require('mongoose');
-const { response } = require('express');
+// const { response } = require('express');
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -26,7 +26,7 @@ let counter = 0;
 
 //Connect to the Mongo DB
 try {
-  mongoose.connect(process.env.MONGODB_URI, options);
+  mongoose.connect('mongodb://localhost:27017/codefollowers', options);
 } catch (error) {
   console.error('Could not start up server: ', error);
 }
