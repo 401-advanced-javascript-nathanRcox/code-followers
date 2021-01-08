@@ -67,7 +67,7 @@ function signin() {
   (async () => {
     try {
         const response = await prompts(signinQuestions);
-          const results = await superagent.post(`https://code-followers-dev.herokuapp.com/signin`)
+          const results = await superagent.post(`https://code-followers.herokuapp.com/signin`)
             .auth(response.username, response.password)
           token = results.body.user.token;
           console.log(`${response.username}, you have successfully logged in!`)
@@ -100,7 +100,7 @@ function signup() {
   (async () => {
     const response = await prompts(signupQuestions);
     //  await superagent.post(`http://localhost:${process.env.PORT}/signup`)
-    await superagent.post(`https://code-followers-dev.herokuapp.com/signup`)
+    await superagent.post(`https://code-followers.herokuapp.com/signup`)
     .send(response)
     .then(results => {
       console.log(`Welcome, ${results.body.user.username}!`);
@@ -116,7 +116,7 @@ function signup() {
 
 async function tallyScore(counter, userId) {
   // await superagent.put(`http://localhost:${process.env.PORT}/update-score/${userId}`)
-  await superagent.put(`https://code-followers-dev.herokuapp.com/update-score/${userId}`)
+  await superagent.put(`https://code-followers.herokuapp.com/update-score/${userId}`)
   .send({ counter })
   // .then(results => console.log('RESULTS:', results))
   .catch(e => console.error(e, 'Banana Cream Pie.'));
