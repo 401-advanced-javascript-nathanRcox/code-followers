@@ -27,7 +27,7 @@ Garrett Cintron, Nathan Cox, Ashley Moore, Sara Strasner
 ## How to Play
 - Download this repository
    ```sh
-   npm i codefollowers
+   npm i code-followers
    ```
 - Install dependencies
     ```sh
