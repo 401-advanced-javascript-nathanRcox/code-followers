@@ -1,7 +1,5 @@
 'use strict';
 
-require('dotenv').config();
-
 //requiring API server and user model
 const API = require('./API');
 const server = require('./src/server');
@@ -9,11 +7,12 @@ const users = require('./users/user-model');
 
 //third party dependancies
 const prompts = require('prompts');
+require('dotenv').config();
 const superagent = require('superagent');
 
 // Database
 const mongoose = require('mongoose');
-// const { response } = require('express');
+const { response } = require('express');
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -26,7 +25,7 @@ let counter = 0;
 
 //Connect to the Mongo DB
 try {
-  mongoose.connect('mongodb://localhost:27017/codefollowers', options);
+  mongoose.connect(process.env.MONGODB_URI, options);
 } catch (error) {
   console.error('Could not start up server: ', error);
 }
