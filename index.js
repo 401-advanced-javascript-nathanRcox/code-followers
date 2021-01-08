@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 //requiring API server and user model
 const API = require('./API');
 const server = require('./src/server');
@@ -7,7 +9,6 @@ const users = require('./users/user-model');
 
 //third party dependancies
 const prompts = require('prompts');
-require('dotenv').config();
 const superagent = require('superagent');
 
 // Database
