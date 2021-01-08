@@ -136,6 +136,27 @@ async function tallyScore(counter, userId) {
     .catch(e => console.error(e.message, 'Your score is unavailable.'));
 }
 
+function playAgain(userId) {
+  (async () => {
+    const response = await prompts({
+      type: 'toggle',
+      name: 'value',
+      message: 'Do you want to play again',
+      initial: true,
+      active: 'yes',
+      inactive: 'no',
+    });
+
+    if (response.value === false) {
+      tallyScore(counter, userId);
+      console.log('Thanks for playing! Exit by typing control+c.');
+    } else if (response.value === true) {
+      tallyScore(counter, userId); // This could be a high-score counter.
+      renderGame(userId);
+    }
+  })();
+}
+
 function renderGame(userId) {
   let node = API.root;
   let response = {};
@@ -171,27 +192,6 @@ function renderGame(userId) {
       node = response.value;
     }
     playAgain(userId);
-  })();
-}
-
-function playAgain(userId) {
-  (async () => {
-    const response = await prompts({
-      type: 'toggle',
-      name: 'value',
-      message: 'Do you want to play again',
-      initial: true,
-      active: 'yes',
-      inactive: 'no',
-    });
-
-    if (response.value === false) {
-      tallyScore(counter, userId);
-      console.log('Thanks for playing! Exit by typing control+c.');
-    } else if (response.value === true) {
-      tallyScore(counter, userId); // This could be a high-score counter.
-      renderGame(userId);
-    }
   })();
 }
 
