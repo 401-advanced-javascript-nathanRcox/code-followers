@@ -8,7 +8,7 @@ Garrett Cintron, Nathan Cox, Ashley Moore, Sara Strasner
 
 ## Domain Model
 
-![Domain Model](./assets/groupProject.jpg)
+![Domain Model](./assets/CF-UML.jpg)
 
 ## NoSQL Database Map
 

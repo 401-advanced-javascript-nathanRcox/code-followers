@@ -108,28 +108,10 @@ function signup() {
       // renderGame(userId);
       console.log('------------------------')
 
-      doYouWantToPlay(userId);
+      renderGame(userId);
     })
     .catch(e => console.error('This is a sign-up error!', e.message))
   })();
-}
-
-function doYouWantToPlay(userId) {
-  (async () => {
-    const response = await prompts({
-      type: 'toggle',
-      name: 'value',
-      message: 'Do you want to play a game',
-      initial: true,
-      active: 'yes',
-      inactive: 'no'
-    });
-    if (response.value === false) {
-      console.log(`Fine Then Don't Play!! :((`)
-    } else if (response.value === true) {
-      renderGame(userId);
-    }
-  })()
 }
 
 async function tallyScore(counter, userId) {
